@@ -5,7 +5,7 @@
   </header>
   <div class="items-sell-main">
     <h2 class="items-sell-title">商品の情報を入力</h2>
-    <%= form_with model: @item , local: true do |f| %>
+    <%= form_with model: @item , url: items_path, local: true do |f| %>
     <%= render 'shared/error_messages', model: f.object %>
     <%# 商品画像 %>
     <div class="img-upload">
@@ -52,6 +52,12 @@
           <span class="indispensable">必須</span>
         </div>
         <%= f.collection_select(:sales_status_id, SalesStatus.all, :id, :example, {}, {class:"select-box", id:"item-sales-status"}) %>
+        <div class="tag-field", id='tag-field'>
+          <%= f.label :tag_name, "タグ" %>
+          <%= f.text_field :tag_name, class:"input-tag" %>
+        </div>
+        <div id="search-result">
+        </div>
       </div>
     </div>
     <%# /商品の詳細 %>

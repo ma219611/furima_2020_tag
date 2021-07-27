@@ -60,6 +60,10 @@
           <th class="detail-item">発送日の目安</th>
           <td class="detail-value"><%= @item.scheduled_delivery.date %></td>
         </tr>
+        <tr>
+          <th class="detail-item">タグ</th>
+          <td class="detail-value"><% @item.tags.each do |tag| %>#<%= tag.tag_name%><%end%></td>
+        </tr>
       </tbody>
     </table>
     <div class="option">

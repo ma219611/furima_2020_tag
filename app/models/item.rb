@@ -6,9 +6,9 @@ class Item < ApplicationRecord
   # 値が入っているか検証
   with_options presence: true do
     validates :image
-    validates :name
-    validates :info
-    validates :price
+    # validates :name
+    # validates :info
+    # validates :price
   end
 
   # 金額が半角であるか検証
@@ -39,4 +39,6 @@ class Item < ApplicationRecord
   # <<アソシエーション>>
   belongs_to :user
   has_one :order
+  has_many :item_tag_relations
+  has_many :tags, through: :item_tag_relations
 end

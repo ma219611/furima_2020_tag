@@ -8,11 +8,12 @@ class ItemsController < ApplicationController
   end
 
   def new
-    @item = Item.new
+    @item = ItemsTag.new
   end
 
   def create
-    @item = Item.new(item_params)
+    @item = ItemsTag.new(item_params)
+    binding.pry
     # バリデーションで問題があれば、保存はされず「商品出品画面」を再描画
     if @item.save
       return redirect_to root_path
@@ -48,7 +49,7 @@ class ItemsController < ApplicationController
   private
 
   def item_params
-    params.require(:item).permit(
+    params.require(:items_tag).permit(
       :image,
       :name,
       :info,
@@ -57,7 +58,8 @@ class ItemsController < ApplicationController
       :shipping_fee_status_id,
       :prefecture_id,
       :scheduled_delivery_id,
-      :price
+      :price,
+      :tag_name
     ).merge(user_id: current_user.id)
   end
 
