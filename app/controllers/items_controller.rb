@@ -1,6 +1,6 @@
 class ItemsController < ApplicationController
   before_action :select_item, only: [:show, :edit, :update, :destroy]
-  before_action :set_item_form, only: [:edit, :update]
+  # before_action :set_item_form, only: [:edit, :update]
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
   before_action :redirect_to_show, only: [:edit, :update, :destroy]
 
@@ -31,20 +31,42 @@ class ItemsController < ApplicationController
   end
 
   def edit
-    @item_form.tag_name = @item.tags.first&.tag_name
+    item_attributes = @item.attributes
+    @item_form = ItemForm.new(item_attributes)
+    @item_form.tag_name = @item.tags&.first&.tag_name
+
     return redirect_to root_path if @item.order != nil
   end
 
   def update
     @item_form = ItemForm.new(item_form_params)
+    @item_form.image ||= @item.image.blob
+
     if @item_form.valid?
       @item_form.update(item_form_params, @item)
-      # item_form_paramsに情報を受け取ってる、@itemは更新対象
-      return redirect_to item_path(@item)
+      redirect_to root_path
     else
-      render 'edit'
+      render :edit
     end
   end
+
+  def search
+    return nil if params[:keyword] == ""
+    tag = Tag.where(['tag_name LIKE ?', "%#{params[:keyword]}%"] )
+    render json:{ keyword: tag }
+  end
+
+
+  # def update
+  #   # @item_form = ItemForm.new(item_form_params)
+  #   if @item_form.valid?
+  #     @item_form.update(item_form_params, @item)
+  #     # item_form_paramsに情報を受け取ってる、@itemは更新対象
+  #     return redirect_to item_path(@item)
+  #   else
+  #     render 'edit'
+  #   end
+  # end
 
   # 古木戸さんのやつ
   # def update
@@ -85,11 +107,6 @@ class ItemsController < ApplicationController
 
   def select_item
     @item = Item.find(params[:id])
-  end
-
-  def set_item_form
-    item_attributes = @item.attributes
-    @item_form = ItemForm.new(item_attributes)
   end
 
   def redirect_to_show
